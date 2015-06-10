@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load articletags %}
+{% block container %}
+        <div class="row">
+
+            {% include 'sidebar_nav.html' %}
+
+            <!-- Blog Entries Column -->
+            <div class="col-md-8">
+                <h1 class="page-header">Top Articles <small>worth reading</small></h1>
+                {% if latest_article %}
+                {% with latest_article as article %}
+                <h2><a href="{% url 'article-detail' article.id %}">{{ article.title }}</a></h2>
+                <p class="lead">by {{ article.author|title }}</p>
+                <p><span class="glyphicon glyphicon-time"></span> Posted on {{ article.publication_date|date:"F j, Y" }} at {{ article.publication_date|date:"h:i A" }}</p>
+                <hr>
+                <img class="img-responsive" src="{{ article.hero_image.url }}" alt="">
+                <hr>
+                <p style="white-space: pre-wrap;">{{ article.body_text|truncatechars:240 }}</p>
+                <a class="btn btn-primary" href="{% url 'article-detail' article.id %}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+                <hr>
+                {% endwith %}
+                {% endif %}
+
+                {% for article in top_articles %}
+                <h2>
+                    <a href="{% url 'article-detail' article.id %}">{{ article.title }}</a>
+                </h2>
+                <p class="lead">by {{ article.author|title }}</p>
+                <p><span class="glyphicon glyphicon-time"></span> Posted on {{ article.publication_date|date:"F j, Y" }} at {{ article.publication_date|date:"h:i A" }}</p>
+                <hr>
+                <p style="white-space: pre-wrap;">{{ article.body_text|truncatechars:240 }}</p>
+                <hr>
+                {% endfor %}
+                <!-- Pager -->
+                <ul class="pager">
+                    <li class="previous">
+                        <a href="#">&larr; Older</a>
+                    </li>
+                    <li class="next">
+                        <a href="#">Newer &rarr;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        {% include_random_articles %}
+
+{% endblock %}
